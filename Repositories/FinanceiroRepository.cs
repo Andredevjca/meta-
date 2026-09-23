@@ -1,9 +1,11 @@
+using MetaMais.Interfaces.Services;
+using MetaMais.Interfaces.Repositories;
 using Dapper;
 using MetaMais.Models;
 using MetaMais.Services;
 using MetaMais.ViewModels;
 namespace MetaMais.Repositories;
-public class FinanceiroRepository(Banco banco, CalculadoraObjetivoService calculadora)
+public class FinanceiroRepository(Banco banco, ICalculadoraObjetivoService calculadora) : IFinanceiroRepository
 {
  private const string ConsultaObjetivos = "SELECT o.*, COALESCE(c.Total,0) TotalContribuido, c.Ultima UltimaContribuicao FROM objetivos o LEFT JOIN (SELECT ObjetivoId,SUM(Valor) Total,MAX(Data) Ultima FROM contribuicoes_objetivos GROUP BY ObjetivoId) c ON c.ObjetivoId=o.Id WHERE o.UsuarioId=@UsuarioId";
  public async Task<Usuario?> UsuarioAsync(string email) { await using var c=banco.Abrir(); return await c.QuerySingleOrDefaultAsync<Usuario>("SELECT * FROM usuarios WHERE Email=@email",new { email }); }

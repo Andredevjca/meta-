@@ -1,6 +1,6 @@
-﻿using System.Globalization;
+using System.Globalization;
 using MetaMais.Repositories;
-using MetaMais.Services;
+using MetaMais.Dependencias;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.RateLimiting;
@@ -11,10 +11,7 @@ builder.Services.AddControllersWithViews(o => o.Filters.Add(new AutoValidateAnti
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(o => { o.LoginPath = "/Login"; o.Cookie.Name = "MetaMais.Sessao"; o.Cookie.HttpOnly = true; o.ExpireTimeSpan = TimeSpan.FromDays(7); });
 builder.Services.AddAuthorization();
 builder.Services.AddRateLimiter(o => o.AddPolicy("login", c => RateLimitPartition.GetFixedWindowLimiter(c.Connection.RemoteIpAddress?.ToString() ?? "local", _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 })));
-builder.Services.AddSingleton<Banco>();
-builder.Services.AddScoped<FinanceiroRepository>();
-builder.Services.AddSingleton<CalculadoraObjetivoService>();
-builder.Services.AddScoped<PlanejamentoFinanceiroService>();
+builder.Services.AdicionarDependencias();
 var app = builder.Build();
 app.UseRequestLocalization(new RequestLocalizationOptions().SetDefaultCulture("pt-BR").AddSupportedCultures("pt-BR").AddSupportedUICultures("pt-BR"));
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");

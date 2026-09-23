@@ -1,3 +1,4 @@
+using MetaMais.Interfaces.Repositories;
 using System.Security.Claims;
 using MetaMais.Models;
 using MetaMais.Repositories;
@@ -5,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace MetaMais.Controllers;
 [Authorize]
-public class FinanceiroController(FinanceiroRepository repositorio):Controller
+public class FinanceiroController(IFinanceiroRepository repositorio):Controller
 {
  private int UsuarioId=>int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
  private static bool Valido(string tipo)=>tipo is "Receitas" or "Despesas";

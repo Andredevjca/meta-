@@ -1,7 +1,8 @@
+using MetaMais.Interfaces.Services;
 using MetaMais.Models;
 using MetaMais.ViewModels;
 namespace MetaMais.Services;
-public class CalculadoraObjetivoService
+public class CalculadoraObjetivoService : ICalculadoraObjetivoService
 {
  public static DateTime DataPeriodo(DateTime inicio, string frequencia, int numero) => frequencia switch {
   "Semanal" => inicio.Date.AddDays(7 * numero), "Quinzenal" => inicio.Date.AddDays(15 * numero), _ => inicio.Date.AddMonths(numero)

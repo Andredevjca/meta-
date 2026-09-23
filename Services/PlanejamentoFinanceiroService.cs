@@ -1,8 +1,10 @@
+using MetaMais.Interfaces.Repositories;
+using MetaMais.Interfaces.Services;
 using MetaMais.Models;
 using MetaMais.Repositories;
 using MetaMais.ViewModels;
 namespace MetaMais.Services;
-public class PlanejamentoFinanceiroService(FinanceiroRepository repositorio,CalculadoraObjetivoService calculadora)
+public class PlanejamentoFinanceiroService(IFinanceiroRepository repositorio,ICalculadoraObjetivoService calculadora) : IPlanejamentoFinanceiroService
 {
  public static decimal ValorMensal(Lancamento l,DateTime hoje)
  {

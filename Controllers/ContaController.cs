@@ -1,3 +1,4 @@
+using MetaMais.Interfaces.Repositories;
 using System.Security.Claims;
 using MetaMais.Models;
 using MetaMais.Repositories;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using MySqlConnector;
 namespace MetaMais.Controllers;
-public class ContaController(FinanceiroRepository repositorio,Banco banco):Controller
+public class ContaController(IFinanceiroRepository repositorio,Banco banco):Controller
 {
  [HttpGet("/Login")] public IActionResult Login() { ViewBag.BancoDisponivel=banco.Disponivel; return View(new LoginViewModel()); }
  [HttpPost("/Login"),EnableRateLimiting("login")]

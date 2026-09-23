@@ -53,18 +53,19 @@ As projeções mensal, quinzenal e semanal são alternativas calculadas pelo cal
 
 A capacidade do mês considera as ocorrências reais de receitas/despesas semanais e quinzenais e apenas os eventuais daquele mês. Dívidas ativas entram com uma parcela mensal, inclusive quando há parcelas vencidas; o sistema não calcula juros ou mora.
 
-## Verificação
+## Estrutura do projeto
 
-```powershell
-dotnet build
-dotnet run --project tests/MetaMais.Verificacoes.csproj
-```
+- Controllers: rotas e respostas HTTP.
+- Services: regras de planejamento e calculos.
+- Repositories: acesso ao MySQL com Dapper.
+- Interfaces/Services e Interfaces/Repositories: contratos das camadas.
+- Dependencias/InjecaoDependencias.cs: registro central das dependencias.
+- Views e ViewModels: telas Razor e dados de apresentacao.
+- wwwroot/js/site.js: telas e formularios carregados sem recarregar o layout, com suporte ao historico do navegador.
 
-Os testes verificam recálculo, centavos, datas, anos bissextos, períodos, conclusão, prazo vencido e capacidade mensal. Validação de integração exige MySQL ativo.
+## Build
 
-O script `tests/Integracao.ps1` verifica login, 17 rotas, criação de objetivo, aportes, recálculo, conclusão, lançamentos, simuladores, antiforgery e isolamento entre usuários. Execute apenas contra uma instância de teste na porta 5152, configurada com o banco separado `metamais_testes`.
-
-Nesta máquina, o MySQL 8.4.3 foi encontrado em `C:\laragon\bin\mysql\mysql-8.4.3-winx64`. Inicie o MySQL pelo Laragon antes de executar o projeto em uma nova sessão.
+Execute `dotnet build`.
 
 ## Limites desta instalação
 

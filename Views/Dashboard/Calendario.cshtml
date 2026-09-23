@@ -1,5 +1,5 @@
-﻿@model PainelViewModel
-@inject CalculadoraObjetivoService Calculadora
+@model PainelViewModel
+@inject MetaMais.Interfaces.Services.ICalculadoraObjetivoService Calculadora
 @{
  ViewData["Title"]="Calendário";DateTime mes=ViewBag.Mes;var fim=mes.AddMonths(1).AddDays(-1);
  var eventos=new List<(DateTime Data,string Nome,decimal Valor,string Tipo,string Url)>();

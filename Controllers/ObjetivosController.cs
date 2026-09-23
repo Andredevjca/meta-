@@ -1,3 +1,5 @@
+using MetaMais.Interfaces.Services;
+using MetaMais.Interfaces.Repositories;
 using System.Security.Claims;
 using MetaMais.Models;
 using MetaMais.Repositories;
@@ -7,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace MetaMais.Controllers;
 [Authorize]
-public class ObjetivosController(FinanceiroRepository repositorio,CalculadoraObjetivoService calculadora):Controller
+public class ObjetivosController(IFinanceiroRepository repositorio,ICalculadoraObjetivoService calculadora):Controller
 {
  private int UsuarioId=>int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
  public async Task<IActionResult> Index() => View((await repositorio.ObjetivosAsync(UsuarioId)).Select(o=>new ObjetivoPlanejado(o,calculadora.Calcular(o))).ToList());

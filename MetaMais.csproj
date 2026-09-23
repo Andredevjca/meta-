@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Content Include="Queries\Esquema.sql" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
-    <Compile Remove="tests\**\*.cs" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
     <PackageReference Include="Dapper" Version="2.1.86" />
     <PackageReference Include="MySqlConnector" Version="2.6.2" />
