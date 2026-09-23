@@ -1,0 +1,10 @@
+@model LoginViewModel
+@{Layout="_LayoutConta"; ViewData["Title"]="Entrar";}
+<span class="eyebrow">SEU PRÓXIMO PASSO COMEÇA AQUI</span><h1>Bom ter você por aqui.</h1><p class="muted">Entre para transformar seus planos em conquistas.</p>
+@if(ViewBag.BancoDisponivel==false){<div class="alert alert-warning">O MySQL ainda não está conectado. Configure a conexão em <code>appsettings.json</code> e reinicie o projeto.</div>}
+<form method="post" action="/Login">@Html.AntiForgeryToken()<div asp-validation-summary="All" class="validation"></div>
+ <label asp-for="Email">E-mail</label><input asp-for="Email" placeholder="voce@exemplo.com" autocomplete="username" />
+ <label asp-for="Senha">Senha</label><input asp-for="Senha" placeholder="Sua senha" autocomplete="current-password" maxlength="72" />
+ <div class="entre login-opcoes"><label class="check"><input asp-for="LembrarMe" /> Lembrar-me</label><a href="/EsqueciSenha">Esqueci minha senha</a></div>
+ <button class="btn btn-primary w-100" type="submit">Entrar na minha conta <i class="fa-solid fa-arrow-right"></i></button>
+</form><p class="conta-alternativa">Ainda não tem uma conta? <a href="/Cadastro">Comece agora</a></p><div class="seguro"><i class="fa-solid fa-shield-halved"></i> Seu planejamento, no seu ritmo.</div>

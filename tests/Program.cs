@@ -1,0 +1,24 @@
+using MetaMais.Models;
+using MetaMais.Services;
+var calculadora=new CalculadoraObjetivoService();var verificacoes=0;
+System.Globalization.CultureInfo.CurrentCulture=new System.Globalization.CultureInfo("pt-BR");
+void Igual<T>(T esperado,T atual,string nome){if(!EqualityComparer<T>.Default.Equals(esperado,atual))throw new Exception($"{nome}: esperado {esperado}, encontrado {atual}");Console.WriteLine($"OK: {nome}");verificacoes++;}
+var objetivo=new Objetivo {Nome="Viagem",ValorObjetivo=5000m,ValorInicial=1000m,DataInicio=new(2026,1,15),DataLimite=new(2026,11,15)};
+var validacoes=new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+Igual(true,System.ComponentModel.DataAnnotations.Validator.TryValidateObject(objetivo,new(objetivo),validacoes,true),"Validação decimal na cultura pt-BR");
+var antes=calculadora.Calcular(objetivo,new(2026,2,15));
+Igual(10,antes.Periodos,"Dez vencimentos mensais incluindo o check-in de hoje");Igual(400m,antes.PorPeriodo,"Contribuição inicial");
+objetivo.TotalContribuido=250m;objetivo.UltimaContribuicao=new(2026,2,15);
+var depois=calculadora.Calcular(objetivo,new(2026,2,15));Igual(9,depois.Periodos,"Check-in realizado encerra o vencimento do dia");Igual(416.67m,depois.PorPeriodo,"Recálculo após contribuição abaixo do planejado");Igual(3750m,depois.Restante,"Saldo usa valores reais");
+Igual(new DateTime(2024,2,29),CalculadoraObjetivoService.DataPeriodo(new(2024,1,31),"Mensal",1),"Fevereiro bissexto");
+Igual(new DateTime(2024,3,31),CalculadoraObjetivoService.DataPeriodo(new(2024,1,31),"Mensal",2),"Ancoragem no dia 31 preservada após fevereiro");
+Igual(new DateTime(2025,2,28),CalculadoraObjetivoService.DataPeriodo(new(2025,1,31),"Mensal",1),"Fevereiro não bissexto");
+Igual(new DateTime(2026,2,15),CalculadoraObjetivoService.DataPeriodo(new(2026,1,31),"Quinzenal",1),"Quinzenas de quinze dias");
+objetivo.TotalContribuido=4500m;var concluido=calculadora.Calcular(objetivo,new(2026,2,15));Igual(0m,concluido.Restante,"Excedente não gera restante negativo");Igual(100m,concluido.Percentual,"Progresso limitado a 100%");Igual(0m,concluido.Mensal,"Meta concluída dispensa novas contribuições");
+objetivo.TotalContribuido=0;var vencido=calculadora.Calcular(objetivo,new(2027,1,1));Igual(true,vencido.Atrasado,"Prazo vencido sinalizado");Igual(0,vencido.Periodos,"Prazo vencido sem períodos fictícios");Igual(4000m,vencido.PorPeriodo,"Prazo vencido sem divisão por zero");
+var curto=new Objetivo{ValorObjetivo=100m,DataInicio=new(2026,1,1),DataLimite=new(2026,1,3),Frequencia="Semanal"};Igual(1,calculadora.Calcular(curto,new(2026,1,1)).Periodos,"Prazo parcial possui vencimento final");
+var semanal=new Lancamento{Valor=100m,Periodicidade="Semanal",Data=new(2026,1,2)};Igual(500m,PlanejamentoFinanceiroService.ValorMensal(semanal,new(2026,1,15)),"Mês com cinco ocorrências semanais");
+semanal.Ativo=false;Igual(0m,PlanejamentoFinanceiroService.ValorMensal(semanal,new(2026,1,15)),"Receita inativa excluída");
+var eventual=new Lancamento{Valor=300m,Periodicidade="Eventual",Data=new(2026,2,1)};Igual(0m,PlanejamentoFinanceiroService.ValorMensal(eventual,new(2026,1,15)),"Receita eventual fora do mês excluída");
+var hash=BCrypt.Net.BCrypt.HashPassword("admin",12);Igual(true,BCrypt.Net.BCrypt.Verify("admin",hash),"Senha inicial validada com BCrypt");Igual(false,BCrypt.Net.BCrypt.Verify("outra",hash),"Senha incorreta rejeitada");
+Console.WriteLine($"{verificacoes} verificações concluídas.");

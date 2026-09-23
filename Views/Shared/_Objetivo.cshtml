@@ -1,0 +1,11 @@
+@model ObjetivoPlanejado
+@{var o=Model.Objetivo;var c=Model.Calculo;}
+<article class="objetivo-card">
+ <div class="objetivo-topo"><span class="objetivo-icone @o.Categoria.ToLowerInvariant()"><i class="fa-solid @o.Icone"></i></span><span class="badge-suave @(o.Status=="Concluído"?"verde":"")">@(c.Atrasado?"Prazo vencido":o.Status)</span></div>
+ <a href="/Objetivos/Detalhes/@o.Id" class="objetivo-titulo">@o.Nome</a><p class="muted">@o.Categoria · Prioridade @(o.Prioridade==1?"alta":o.Prioridade==2?"média":"baixa")</p>
+ <div class="objetivo-valores"><strong>@o.ValorAcumulado.ToString("C")</strong><span>de @o.ValorObjetivo.ToString("C")</span></div>
+ <div class="progress" role="progressbar" aria-label="Progresso de @o.Nome" aria-valuenow="@c.Percentual.ToString("0",CultureInfo.InvariantCulture)" aria-valuemin="0" aria-valuemax="100"><div style="width:@c.Percentual.ToString("0.##",CultureInfo.InvariantCulture)%"></div></div>
+ <div class="entre muted"><small>Faltam @c.Restante.ToString("C")</small><strong>@c.Percentual.ToString("0")%</strong></div>
+ <div class="objetivo-rodape"><div><small>@(o.Status=="Concluído"?"Você conquistou!":"Guardar por período")</small><strong>@c.PorPeriodo.ToString("C") <small>/ @o.Frequencia.ToLower()</small></strong></div><a href="/Objetivos/Detalhes/@o.Id" class="seta-link" aria-label="Ver @o.Nome"><i class="fa-solid fa-arrow-right"></i></a></div>
+ <small class="muted"><i class="fa-regular fa-calendar"></i> Até @o.DataLimite.ToString("dd/MM/yyyy")</small>
+</article>

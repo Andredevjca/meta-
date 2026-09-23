@@ -1,0 +1,5 @@
+@model List<ObjetivoPlanejado>
+@{ViewData["Title"]="Meus objetivos";}
+<div class="titulo-pagina"><div><span class="eyebrow">O FUTURO QUE VOCÊ IMAGINA</span><h1>Meus objetivos</h1><p>Transforme o que você quer em um caminho possível.</p></div><a class="btn btn-primary" href="/Objetivos/Novo"><i class="fa-solid fa-plus"></i> Novo objetivo</a></div>
+<div class="filtros"><button class="filtro ativo" data-filtro="Todos">Todos <span>@Model.Count</span></button>@foreach(var status in new[]{"Ativo","Concluído","Pausado","Cancelado"}){<button class="filtro" data-filtro="@status">@status</button>}</div>
+<div class="objetivos-grid">@foreach(var o in Model){<div data-status="@o.Objetivo.Status"><partial name="_Objetivo" model="o" /></div>}</div><div class="estado-vazio" id="vazio-filtro" hidden="@(Model.Count>0)"><i class="fa-solid fa-bullseye vazio-icone"></i><h3>Nenhum objetivo por aqui ainda.</h3><p>Comece com algo que você deseja conquistar.</p><a class="btn btn-primary" href="/Objetivos/Novo">Criar objetivo</a></div>

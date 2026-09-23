@@ -1,0 +1,7 @@
+@model PainelViewModel
+<div class="resumo-financeiro">
+ <div><span><i class="fa-solid fa-arrow-down receita"></i> Receita do mês</span><strong>@Model.ReceitaMensal.ToString("C")</strong><small>Suas fontes de renda</small></div>
+ <div><span><i class="fa-solid fa-arrow-up despesa"></i> Despesas do mês</span><strong>@Model.DespesaMensal.ToString("C")</strong><small>Fixas e variáveis</small></div>
+ <div><span><i class="fa-regular fa-credit-card"></i> Parcelas de dívidas</span><strong>@Model.ParcelasMensais.ToString("C")</strong><small>Compromissos mensais</small></div>
+ <div class="disponivel"><span><i class="fa-solid fa-wallet"></i> Disponível para planejar</span><strong>@Model.Capacidade.ToString("C")</strong><small>Sua capacidade estimada</small></div>
+</div>

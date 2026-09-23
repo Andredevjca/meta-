@@ -1,0 +1,20 @@
+﻿@model PainelViewModel
+@inject CalculadoraObjetivoService Calculadora
+@{
+ ViewData["Title"]="Calendário";DateTime mes=ViewBag.Mes;var fim=mes.AddMonths(1).AddDays(-1);
+ var eventos=new List<(DateTime Data,string Nome,decimal Valor,string Tipo,string Url)>();
+ foreach(var (lista,tipo,url) in new[]{(Model.Receitas,"receita","/Receitas"),(Model.Despesas,"despesa","/Despesas")}) {
+  foreach(var l in lista.Where(x=>x.Ativo)) {
+   if(l.Periodicidade=="Eventual") {if(l.Data>=mes && l.Data<=fim)eventos.Add((l.Data,l.Descricao,l.Valor,tipo,url));continue;}
+   for(var i=0;i<=16000;i++){var data=CalculadoraObjetivoService.DataPeriodo(l.Data,l.Periodicidade,i);if(data>fim)break;if(data>=mes)eventos.Add((data,l.Descricao,l.Valor,tipo,url));}
+  }
+ }
+ foreach(var d in Model.Dividas.Where(x=>x.Status=="Ativa")){for(var i=d.ParcelasPagas;i<d.QuantidadeParcelas;i++){var data=d.DataInicio.AddMonths(i);if(data>=mes&&data<=fim)eventos.Add((data,d.Descricao,d.ValorParcela,"despesa","/Dividas"));}}
+ foreach(var o in Model.Objetivos.Where(x=>x.Objetivo.Status=="Ativo")) {
+  foreach(var data in Calculadora.DatasRestantes(o.Objetivo,mes,o.Objetivo.Frequencia).Where(d=>d<=fim))eventos.Add((data,"Guardar: "+o.Objetivo.Nome,o.Calculo.PorPeriodo,"meta","/Objetivos/Contribuicao/"+o.Objetivo.Id));
+  if(o.Objetivo.DataLimite>=mes&&o.Objetivo.DataLimite<=fim)eventos.Add((o.Objetivo.DataLimite,"Prazo: "+o.Objetivo.Nome,o.Objetivo.ValorObjetivo,"meta","/Objetivos/Detalhes/"+o.Objetivo.Id));
+ }
+ foreach(var c in Model.Contribuicoes.Where(x=>x.Data>=mes&&x.Data<=fim))eventos.Add((c.Data,"Guardado: "+c.NomeObjetivo,c.Valor,"receita","/Objetivos/Detalhes/"+c.ObjetivoId));
+}
+<div class="titulo-pagina"><div><span class="eyebrow">UM DIA DE CADA VEZ</span><h1>Calendário financeiro</h1><p>Compromissos, contribuições e próximos passos.</p></div><form method="get" class="botoes"><select name="mes" aria-label="Mês">@for(var m=1;m<=12;m++){<option value="@m" selected="@(m==mes.Month)">@(new DateTime(mes.Year,m,1).ToString("MMMM"))</option>}</select><input name="ano" aria-label="Ano" type="number" min="1900" max="2200" value="@mes.Year" /><button class="btn btn-primary">Ver mês</button></form></div><div class="calendario-container"><div class="calendario-grid">@foreach(var dia in new[]{"Dom","Seg","Ter","Qua","Qui","Sex","Sáb"}){<div class="calendario-dia">@dia</div>}@for(var i=0;i<(int)mes.DayOfWeek;i++){<div class="dia-calendario"></div>}@for(var dia=mes;dia<=fim;dia=dia.AddDays(1)){<div class="dia-calendario @(dia==DateTime.Today?"hoje":"")"><strong>@dia.Day</strong>@foreach(var e in eventos.Where(x=>x.Data.Date==dia)){<a class="evento @e.Tipo" href="@e.Url">@e.Nome<br /><b>@e.Valor.ToString("C")</b></a>}</div>}</div></div><p class="muted mt-3">Os valores futuros dos objetivos usam a necessidade atual e serão recalculados a cada contribuição.</p>
+
