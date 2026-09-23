@@ -1,13 +1,28 @@
 @{
- var itens = new[] { ("/Dashboard","fa-chart-pie","Dashboard"), ("/MinhaVidaFinanceira","fa-wallet","Minha vida financeira"), ("/Receitas","fa-arrow-trend-up","Receitas"), ("/Despesas","fa-arrow-trend-down","Despesas"), ("/Dividas","fa-credit-card","Dívidas"), ("/Objetivos","fa-bullseye","Objetivos"), ("/Contribuicoes","fa-coins","Contribuições"), ("/Calendario","fa-calendar-days","Calendário"), ("/Relatorios","fa-chart-simple","Relatórios") };
+    var itens = new[] { ("/Dashboard","fa-chart-pie","Dashboard"), ("/MinhaVidaFinanceira","fa-wallet","Vida financeira"), ("/Receitas","fa-arrow-trend-up","Receitas"), ("/Despesas","fa-arrow-trend-down","Despesas"),
+("/Dividas","fa-credit-card","Dívidas"), ("/Objetivos","fa-bullseye","Objetivos"),
+("/Contribuicoes","fa-coins","Contribuições"), ("/Calendario","fa-calendar-days","Calendário"),
+("/Relatorios","fa-chart-simple","Relatórios") };
 }
-<a class="marca" href="/Dashboard"><span class="marca-icone"><i class="fa-solid fa-arrow-trend-up"></i></span>meta<span class="mais">+</span></a>
-<div class="sidebar-scroll"><div class="nav-legenda">SEU ESPAÇO</div>
-<nav aria-label="Navegação principal">
-@foreach(var (url,icone,nome) in itens) {
- <a class="nav-item @(Context.Request.Path.StartsWithSegments(url) || (url=="/Dashboard" && Context.Request.Path=="/") ? "ativo":"")" href="@url"><i class="fa-solid @icone"></i><span>@nome</span></a>
-}
-</nav>
-<div class="sidebar-dica"><span class="mini-estrela">✦</span><strong>Um passo de cada vez.</strong><p>Pequenas contribuições.<br />Grandes conquistas.</p><a href="/Simulador">Simular uma conquista <i class="fa-solid fa-arrow-right"></i></a></div>
-<a class="nav-item" href="/Configuracoes"><i class="fa-solid fa-gear"></i><span>Configurações</span></a>
-</div><div class="perfil-nav"><a href="/Perfil" class="avatar">@(User.Identity?.Name?.Substring(0,1) ?? "A")</a><a href="/Perfil"><strong>@User.Identity?.Name</strong><small>Meu perfil</small></a><form method="post" action="/Sair">@Html.AntiForgeryToken()<button class="icon-button" title="Sair"><i class="fa-solid fa-arrow-right-from-bracket"></i></button></form></div>
+<a class="marca" href="/Dashboard"><span class="marca-icone"><i class="fa-solid fa-arrow-trend-up"></i></span>meta<span
+    class="mais">+</span></a>
+    <div class="sidebar-scroll">
+        <div class="nav-legenda">SEU ESPAÇO</div>
+        <nav aria-label="Navegação principal">
+            @foreach (var (url, icone, nome) in itens)
+            {
+                <a class="nav-item @(Context.Request.Path.StartsWithSegments(url) || (url=="/Dashboard" && Context.Request.Path=="/") ? "ativo":"")"
+                   href="@url"><i class="fa-solid @icone"></i><span>@nome</span></a>
+            }
+        </nav>
+        <div class="sidebar-dica"><span class="mini-estrela">✦</span><strong>Um passo de cada vez.</strong>
+            <p>Pequenas contribuições.<br />Grandes conquistas.</p><a href="/Simulador">Simular uma conquista <i
+            class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <a class="nav-item" href="/Configuracoes"><i class="fa-solid fa-gear"></i><span>Configurações</span></a>
+    </div>
+    <div class="perfil-nav"><a href="/Perfil" class="avatar">@(User.Identity?.Name?.Substring(0,1) ?? "A")</a><a
+        href="/Perfil"><strong>@User.Identity?.Name</strong><small>Meu perfil</small></a>
+        <form method="post" action="/Sair">@Html.AntiForgeryToken()<button class="icon-button" title="Sair"><i
+            class="fa-solid fa-arrow-right-from-bracket"></i></button></form>
+        </div>

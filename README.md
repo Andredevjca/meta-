@@ -55,17 +55,24 @@ A capacidade do mês considera as ocorrências reais de receitas/despesas semana
 
 ## Estrutura do projeto
 
-- Controllers: rotas e respostas HTTP.
-- Services: regras de planejamento e calculos.
-- Repositories: acesso ao MySQL com Dapper.
-- Interfaces/Services e Interfaces/Repositories: contratos das camadas.
-- Dependencias/InjecaoDependencias.cs: registro central das dependencias.
-- Views e ViewModels: telas Razor e dados de apresentacao.
+- `Controllers`: um controller por tela da navegação, com rotas e respostas HTTP.
+- `Controllers/Objetivos`: arquivos parciais separados para listagem, formulário, detalhes e contribuição. Mantêm o mesmo controller MVC para preservar as URLs e os formulários `/Objetivos/...`.
+- `Services`: regras das telas (login, cadastro, perfil, receitas, despesas, dívidas, calendário, relatórios, notificações e simulador). `Services/Objetivos` separa as operações de cada tela dos objetivos.
+- `Repositories`: persistência dividida em usuários, objetivos, contribuições, lançamentos, dívidas e notificações. Operações relacionadas continuam na mesma transação, incluindo histórico e notificações das contribuições.
+- `Interfaces/Services` e `Interfaces/Repositories`: contratos das respectivas implementações.
+- `Dependencias/InjecaoDependencias.cs`: registro central das dependências.
+- `Models`: uma entidade por arquivo; `ViewModels/<Tela>`: dados de apresentação e validação dos formulários.
+- `Views/<Tela>`: cada tela tem sua pasta, com `Index.cshtml` e, quando necessário, `Editar.cshtml`. Objetivos possui subpastas `Listagem`, `Formulario`, `Detalhes` e `Contribuicao`.
+- `Views/Shared`: somente layouts, navegação e componentes compartilhados.
+- Receitas e despesas têm controllers, services e views próprios e compartilham a persistência e as regras comuns de lançamentos. O planejamento financeiro é compartilhado pelas telas que usam o mesmo resumo.
+- Telas informativas, como configurações e recuperação de senha, não precisam de repositories ou services sem operações próprias.
 - wwwroot/js/site.js: telas e formularios carregados sem recarregar o layout, com suporte ao historico do navegador.
 
 ## Build
 
 Execute `dotnet build`.
+
+Para verificar rotas, renderização Razor, injeção de dependências, autorização, antiforgery e regras extraídas, execute `dotnet run --project Tests/MetaMais.Verificacoes.csproj`. As verificações usam repositórios em memória e um servidor local temporário; não inicializam nem acessam o MySQL.
 
 ## Limites desta instalação
 

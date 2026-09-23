@@ -13,7 +13,7 @@ public class HomeController : Controller
 
     public IActionResult Privacy()
     {
-        return RedirectToAction("Configuracoes", "Dashboard");
+        return Redirect("/Configuracoes");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
