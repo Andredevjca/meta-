@@ -11,6 +11,16 @@ namespace MetaMais.Controllers;
 public class DividasController(IDividasService servico) : Controller
 {
     private int UsuarioId => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+    [HttpPost("/Dividas/Pagar/{id:int}")]
+    public async Task<IActionResult> PagarParcela(int id, int parcelasPagas)
+    {
+        if (!ModelState.IsValid || parcelasPagas < 0) return BadRequest();
+        var pagou = await servico.PagarParcelaAsync(UsuarioId, id, parcelasPagas);
+        TempData[pagou ? "Sucesso" : "AvisoDivida"] = pagou
+            ? "Parcela paga. Dívida atualizada."
+            : "A dívida já foi atualizada ou não possui parcelas em aberto. Confira o card.";
+        return RedirectToAction(nameof(Dividas));
+    }
     [HttpGet("/Dividas")] public async Task<IActionResult> Dividas() => View("Index", await servico.ListarAsync(UsuarioId));
     [HttpGet("/Dividas/Editar/{id:int?}")]
     public async Task<IActionResult> EditarDivida(int id = 0) { var d = await servico.ObterAsync(UsuarioId, id); return d is null ? NotFound() : View("Editar", d); }

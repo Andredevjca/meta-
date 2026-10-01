@@ -22,7 +22,7 @@ public class CalendarioService(IPlanejamentoFinanceiroService planejamento, ICal
                 for (var i = 0; i <= 16000; i++) { var data = CalculadoraObjetivoService.DataPeriodo(l.Data, l.Periodicidade, i); if (data > fim) break; if (data >= mes) eventos.Add(new(data, l.Descricao, l.Valor, tipo, url)); }
             }
         }
-        foreach (var d in painel.Dividas.Where(x => x.Status == "Ativa")) { for (var i = d.ParcelasPagas; i < d.QuantidadeParcelas; i++) { var data = d.DataInicio.AddMonths(i); if (data >= mes && data <= fim) eventos.Add(new(data, d.Descricao, d.ValorParcela, "despesa", "/Dividas")); } }
+        foreach (var d in painel.Dividas.Where(x => x.Status == "Ativa")) { for (var i = 0; i < d.ParcelasRestantes; i++) { var data = d.DataInicio.AddMonths(i); if (data >= mes && data <= fim) eventos.Add(new(data, d.Descricao, d.ValorParcela, "despesa", "/Dividas")); } }
         foreach (var o in painel.Objetivos.Where(x => x.Objetivo.Status == "Ativo"))
         {
             foreach (var data in calculadora.DatasRestantes(o.Objetivo, mes, o.Objetivo.Frequencia).Where(d => d <= fim)) eventos.Add(new(data, "Guardar: " + o.Objetivo.Nome, o.Calculo.PorPeriodo, "meta", "/Objetivos/Contribuicao/" + o.Objetivo.Id));

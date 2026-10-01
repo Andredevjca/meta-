@@ -9,5 +9,6 @@ public interface IDividasService
     Task<List<Divida>> ListarAsync(int usuarioId);
     Task<Divida?> ObterAsync(int usuarioId, int id);
     Task SalvarAsync(int usuarioId, Divida model);
+    Task<bool> PagarParcelaAsync(int usuarioId, int id, int parcelasPagas);
     Task ExcluirAsync(int usuarioId, int id);
 }

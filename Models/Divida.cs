@@ -11,11 +11,13 @@ public class Divida : IValidatableObject
     [Range(typeof(decimal), "0.01", "999999999999.99", ParseLimitsInInvariantCulture = true)] public decimal ValorParcela { get; set; }
     [Range(1, 1200)] public int QuantidadeParcelas { get; set; } = 12;
     [Range(0, 1200)] public int ParcelasPagas { get; set; }
+    // Mantém o nome da coluna existente; representa o vencimento da próxima parcela em aberto.
     [DataType(DataType.Date)] public DateTime DataInicio { get; set; } = DateTime.Today;
     public decimal ValorRestante => Math.Max(0, ValorTotal - ParcelasPagas * ValorParcela);
     public int ParcelasRestantes => Math.Max(0, QuantidadeParcelas - ParcelasPagas);
-    public DateTime DataFinal => DataInicio.AddMonths(QuantidadeParcelas - 1);
+    public DateTime DataFinal => DataInicio.AddMonths(Math.Max(0, ParcelasRestantes - 1));
     public string Status => ParcelasRestantes == 0 || ValorRestante == 0 ? "Quitada" : "Ativa";
+    public DateTime? ProximoVencimento => Status == "Ativa" ? DataInicio : null;
     public IEnumerable<ValidationResult> Validate(ValidationContext context)
     {
         if (ParcelasPagas > QuantidadeParcelas) yield return new("As parcelas pagas não podem superar o total.");
